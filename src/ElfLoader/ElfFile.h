@@ -32,10 +32,10 @@ class ElfFile
 {
 public:
     ElfFile(LPCWSTR FileName);
+    ~ElfFile();
 
 private:
     ElfFile(const ElfFile &);
-    ~ElfFile();
 
     HANDLE m_File;
     Elf32_Hdr m_Header;
