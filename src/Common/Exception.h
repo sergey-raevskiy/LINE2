@@ -7,7 +7,7 @@ class Exception
 {
 public:
     Exception(LPCWSTR Message);
-    CString GetDescription();
+    CString GetDescription() const;
 
 private:
     CString m_Message;

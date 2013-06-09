@@ -5,7 +5,7 @@ Exception::Exception(LPCWSTR Message)
 {
 }
 
-CString Exception::GetDescription()
+CString Exception::GetDescription() const
 {
     return m_Message;
 }
