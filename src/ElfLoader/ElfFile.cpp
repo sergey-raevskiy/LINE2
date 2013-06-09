@@ -72,6 +72,7 @@ ElfFile::ElfFile(LPCWSTR FileName)
 
     ReadSectionHeaders();
     ReadStringTable();
+    ReadProgramHeaders();
 }
 
 ElfFile::~ElfFile()
@@ -141,4 +142,26 @@ void ElfFile::ReadStringTable()
                  &m_StringTable[0],
                  It->sh_offset,
                  It->sh_size);
+}
+
+void ElfFile::ReadProgramHeaders()
+{
+    int CurrentHeader;
+    Elf32_Off CurrentHeaderOffset;
+
+    m_ProgramHeaders.clear();
+
+    for (CurrentHeader = 0, CurrentHeaderOffset = m_Header.e_phoff;
+         CurrentHeader < m_Header.e_phnum;
+         CurrentHeader++, CurrentHeaderOffset += m_Header.e_phentsize)
+    {
+        Elf32_Phdr ProgramHeader;
+
+        ReadFromFile(m_File,
+                     &ProgramHeader,
+                     CurrentHeaderOffset,
+                     sizeof(Elf32_Phdr));
+
+        m_ProgramHeaders.push_back(ProgramHeader);
+    }
 }

@@ -62,6 +62,17 @@ typedef struct {
     Elf32_Word      sh_entsize;
 } Elf32_Shdr;
 
+typedef struct {
+    Elf32_Word  p_type;
+    Elf32_Off   p_offset;
+    Elf32_Addr  p_vaddr;
+    Elf32_Addr  p_paddr;
+    Elf32_Word  p_filesz;
+    Elf32_Word  p_memsz;
+    Elf32_Word  p_flags;
+    Elf32_Word  p_align;
+} Elf32_Phdr;
+
 class ElfFile
 {
 public:
@@ -75,9 +86,11 @@ private:
     Elf32_Hdr m_Header;
 
     std::vector<Elf32_Shdr> m_SectionHeaders;
+    std::vector<Elf32_Phdr> m_ProgramHeaders;
     std::vector<char> m_StringTable;
 
     void ReadHeader();
     void ReadSectionHeaders();
     void ReadStringTable();
+    void ReadProgramHeaders();
 };
