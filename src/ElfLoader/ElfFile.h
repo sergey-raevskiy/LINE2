@@ -8,5 +8,7 @@ public:
     ElfFile(LPCWSTR FileName);
 
 private:
+    ElfFile(const ElfFile &);
+
     HANDLE m_File;
 };
