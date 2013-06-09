@@ -64,26 +64,6 @@ static void ValidateHeader(Elf32_Hdr *Header)
     }
 }
 
-static void ReadSectionHeader(HANDLE File,
-                              Elf32_Shdr *SectionHeader,
-                              Elf32_Off Offset)
-{
-    LARGE_INTEGER LOffset;
-    IO_STATUS_BLOCK Iosb;
-
-    LOffset.QuadPart = LONGLONG(Offset);
-
-    NT_ERR_E(NtReadFile(File,
-                        NULL,
-                        NULL,
-                        NULL,
-                        &Iosb,
-                        SectionHeader,
-                        sizeof(Elf32_Shdr),
-                        &LOffset,
-                        NULL));
-}
-
 ElfFile::ElfFile(LPCWSTR FileName)
     : m_File(OpenElfFile(FileName))
 {
@@ -102,20 +82,7 @@ ElfFile::~ElfFile()
 
 void ElfFile::ReadHeader()
 {
-    IO_STATUS_BLOCK Iosb;
-    LARGE_INTEGER Offset;
-
-    Offset.QuadPart = 0;
-
-    NT_ERR_E(NtReadFile(m_File,
-                        NULL,
-                        NULL,
-                        NULL,
-                        &Iosb,
-                        &m_Header,
-                        sizeof(Elf32_Hdr),
-                        &Offset,
-                        NULL));
+    ReadFromFile(m_File, &m_Header, 0, sizeof(Elf32_Hdr));
 }
 
 void ElfFile::ReadSectionHeaders()
@@ -131,7 +98,11 @@ void ElfFile::ReadSectionHeaders()
     {
         Elf32_Shdr SectionHeader;
 
-        ReadSectionHeader(m_File, &SectionHeader, CurrentSectionOffset);
+        ReadFromFile(m_File,
+                     &SectionHeader,
+                     CurrentSectionOffset,
+                     sizeof(Elf32_Shdr));
+
         m_SectionHeaders.push_back(SectionHeader);
     }
 }
