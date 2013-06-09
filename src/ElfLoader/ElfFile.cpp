@@ -29,10 +29,24 @@ static HANDLE OpenElfFile(LPCWSTR FileName)
     return FileHandle;
 }
 
+static void ValidateHeader(Elf32_Hdr *Header)
+{
+    BOOLEAN ValidMagick = Header->e_ident[0] == 0x7f &&
+                          Header->e_ident[1] == 'E'  &&
+                          Header->e_ident[2] == 'L'  &&
+                          Header->e_ident[3] == 'F';
+
+    if (!ValidMagick)
+    {
+        throw Exception(L"Invalid ELF magick");
+    }
+}
+
 ElfFile::ElfFile(LPCWSTR FileName)
     : m_File(OpenElfFile(FileName))
 {
     ReadHeader();
+    ValidateHeader(&m_Header);
 }
 
 void ElfFile::ReadHeader()
