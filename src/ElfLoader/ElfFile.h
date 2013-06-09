@@ -30,6 +30,25 @@ typedef struct {
     Elf32_Half      e_shtrndx;
 } Elf32_Hdr;
 
+/* sh_type */
+#define SHT_NULL         0
+#define SHT_PROGBIT      1
+#define SHT_SYMTAB       2
+#define SHT_STRTAB       3
+#define SHT_RELA         4
+#define SHT_HASH         5
+#define SHT_DYNAMIC      6
+#define SHT_NOTE         7
+#define SHT_NOBITS       8
+#define SHT_REL          9
+#define SHT_SHLIB        10
+#define SHT_DYNSYM       11
+#define SHT_NUM          12
+#define SHT_LOPROC       0x70000000
+#define SHT_HIPROC       0x7fffffff
+#define SHT_LOUSER       0x80000000
+#define SHT_HIUSER       0xffffffff
+
 typedef struct {
     Elf32_Word      sh_name;
     Elf32_Word      sh_type;
@@ -56,7 +75,9 @@ private:
     Elf32_Hdr m_Header;
 
     std::vector<Elf32_Shdr> m_SectionHeaders;
+    std::vector<char> m_StringTable;
 
     void ReadHeader();
     void ReadSectionHeaders();
+    void ReadStringTable();
 };

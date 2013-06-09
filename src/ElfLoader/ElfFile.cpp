@@ -30,6 +30,27 @@ static HANDLE OpenElfFile(LPCWSTR FileName)
     return FileHandle;
 }
 
+static void ReadFromFile(HANDLE File,
+                         PVOID Buffer,
+                         SIZE_T Offset,
+                         SIZE_T Length)
+{
+    IO_STATUS_BLOCK Iosb;
+    LARGE_INTEGER LOffset;
+
+    LOffset.QuadPart = LONGLONG(Offset);
+
+    NT_ERR_E(NtReadFile(File,
+                        NULL,
+                        NULL,
+                        NULL,
+                        &Iosb,
+                        Buffer,
+                        Length,
+                        &LOffset,
+                        NULL));
+}
+
 static void ValidateHeader(Elf32_Hdr *Header)
 {
     BOOLEAN ValidMagick = Header->e_ident[0] == 0x7f &&
@@ -70,6 +91,7 @@ ElfFile::ElfFile(LPCWSTR FileName)
     ValidateHeader(&m_Header);
 
     ReadSectionHeaders();
+    ReadStringTable();
 }
 
 ElfFile::~ElfFile()
@@ -112,4 +134,40 @@ void ElfFile::ReadSectionHeaders()
         ReadSectionHeader(m_File, &SectionHeader, CurrentSectionOffset);
         m_SectionHeaders.push_back(SectionHeader);
     }
+}
+
+static std::vector<Elf32_Shdr>::const_iterator
+FindStringTable(const std::vector<Elf32_Shdr> & sections)
+{
+    for (std::vector<Elf32_Shdr>::const_iterator It = sections.begin();
+                                                 It != sections.end();
+                                                 It++)
+    {
+        if (It->sh_type == SHT_STRTAB)
+        {
+            return It;
+        }
+    }
+
+    return sections.end();
+}
+
+void ElfFile::ReadStringTable()
+{
+    m_StringTable.clear();
+
+    // TODO: May ELF contain more than one STRTAB section?
+
+    std::vector<Elf32_Shdr>::const_iterator It =
+        FindStringTable(m_SectionHeaders);
+
+    if (It == m_SectionHeaders.end())
+        return;
+
+    m_StringTable.resize(It->sh_size);
+
+    ReadFromFile(m_File,
+                 &m_StringTable[0],
+                 It->sh_offset,
+                 It->sh_size);
 }
