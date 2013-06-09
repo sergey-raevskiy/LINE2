@@ -32,4 +32,23 @@ static HANDLE OpenElfFile(LPCWSTR FileName)
 ElfFile::ElfFile(LPCWSTR FileName)
     : m_File(OpenElfFile(FileName))
 {
+    ReadHeader();
+}
+
+void ElfFile::ReadHeader()
+{
+    IO_STATUS_BLOCK Iosb;
+    LARGE_INTEGER Offset;
+
+    Offset.QuadPart = 0;
+
+    NT_ERR_E(NtReadFile(m_File,
+                        NULL,
+                        NULL,
+                        NULL,
+                        &Iosb,
+                        &m_Header,
+                        sizeof(Elf32_Hdr),
+                        &Offset,
+                        NULL));
 }
