@@ -3,6 +3,7 @@
 #include "..\Common\NtException.h"
 #include <iofuncs.h>
 #include <rtlfuncs.h>
+#include <obfuncs.h>
 
 static HANDLE OpenElfFile(LPCWSTR FileName)
 {
@@ -47,6 +48,12 @@ ElfFile::ElfFile(LPCWSTR FileName)
 {
     ReadHeader();
     ValidateHeader(&m_Header);
+}
+
+ElfFile::~ElfFile()
+{
+    NTSTATUS Status = NtClose(m_File);
+    ASSERT(NT_SUCCESS(Status));
 }
 
 void ElfFile::ReadHeader()

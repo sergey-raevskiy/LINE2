@@ -35,6 +35,7 @@ public:
 
 private:
     ElfFile(const ElfFile &);
+    ~ElfFile();
 
     HANDLE m_File;
     Elf32_Hdr m_Header;
