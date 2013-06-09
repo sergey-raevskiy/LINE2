@@ -18,6 +18,6 @@ private:
                                                                               \
     if (!NT_SUCCESS(Status))                                                  \
     {                                                                         \
-        throw NtException(Status)                                             \
+        throw NtException(Status);                                            \
     }                                                                         \
 } while (0)
