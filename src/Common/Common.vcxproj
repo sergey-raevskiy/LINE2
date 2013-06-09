@@ -68,9 +68,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Exception.h" />
+    <ClInclude Include="NtException.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Exception.cpp" />
+    <ClCompile Include="NtException.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
