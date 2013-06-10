@@ -10,7 +10,7 @@ public:
     NtHandle(const NtHandle & Other);
 
     PHANDLE operator &();
-    operator PHANDLE() const;
+    operator HANDLE() const;
 
 private:
     HANDLE m_Handle;

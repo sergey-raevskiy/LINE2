@@ -31,9 +31,9 @@ PHANDLE NtHandle::operator &()
     return &m_Handle;
 }
 
-NtHandle::operator PHANDLE() const
+NtHandle::operator HANDLE() const
 {
-    return const_cast<PHANDLE>(&m_Handle);
+    return m_Handle;
 }
 
 void NtHandle::CloseHandle()
