@@ -62,6 +62,24 @@ typedef struct {
     Elf32_Word      sh_entsize;
 } Elf32_Shdr;
 
+#define PT_NULL             0
+#define PT_LOAD             1
+#define PT_DYNAMIC          2
+#define PT_INTERP           3
+#define PT_NOTE             4
+#define PT_SHLIB            5
+#define PT_PHDR             6
+#define PT_TLS              7
+#define PT_GNU_EH_FRAME     0x6474e550
+#define PT_GNU_STACK        0x6474e551
+#define PT_RELRO            0x6474e552
+#define PT_LOPROC           0x70000000
+#define PT_HIPROC           0x7fffffff
+
+#define PF_R                0x4
+#define PF_W                0x2
+#define PF_X                0x1
+
 typedef struct {
     Elf32_Word  p_type;
     Elf32_Off   p_offset;
@@ -79,6 +97,8 @@ public:
     ElfFile(LPCWSTR FileName);
     ~ElfFile();
 
+    void Map(HANDLE hProcess);
+
 private:
     ElfFile(const ElfFile &);
 
@@ -93,4 +113,6 @@ private:
     void ReadSectionHeaders();
     void ReadStringTable();
     void ReadProgramHeaders();
+
+    void GetImageBoundaries(SIZE_T & Min, SIZE_T & Max);
 };

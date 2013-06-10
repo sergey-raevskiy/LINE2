@@ -1,9 +1,12 @@
 #include "ElfFile.h"
 
 #include "..\Common\NtException.h"
+#include "..\Common\NtHandle.h"
 #include <iofuncs.h>
 #include <rtlfuncs.h>
 #include <obfuncs.h>
+#include <mmfuncs.h>
+#include <intsafe.h>
 
 static HANDLE OpenElfFile(LPCWSTR FileName)
 {
@@ -163,5 +166,113 @@ void ElfFile::ReadProgramHeaders()
                      sizeof(Elf32_Phdr));
 
         m_ProgramHeaders.push_back(ProgramHeader);
+    }
+}
+
+void ElfFile::GetImageBoundaries(SIZE_T & Min, SIZE_T & Max)
+{
+    Min = SIZE_T_MAX;
+    Max = 0;
+
+    for (std::vector<Elf32_Phdr>::const_iterator It = m_ProgramHeaders.begin();
+                                                 It != m_ProgramHeaders.end();
+                                                 It++)
+    {
+        if (It->p_type != PT_LOAD)
+            continue;
+
+        if (It->p_vaddr < Min)
+        {
+            Min = It->p_vaddr;
+        }
+
+        SIZE_T End = It->p_vaddr + It->p_memsz;
+
+        if (End > Max)
+        {
+            Max = End;
+        }
+    }
+}
+
+void ElfFile::Map(HANDLE hProcess)
+{
+    NtHandle hSection;
+
+    SIZE_T Min, Max;
+
+    GetImageBoundaries(Min, Max);
+
+    SIZE_T MappingBase = Min & 0xffff0000;
+    SIZE_T MappingSize = (Max - Min) + (Min & 0xffff);
+
+    LARGE_INTEGER SectionSize;
+    SectionSize.QuadPart = LONGLONG(MappingSize);
+
+    NT_ERR_E(NtCreateSection(&hSection,
+                             SECTION_MAP_READ | SECTION_MAP_EXECUTE |
+                             SECTION_MAP_WRITE | SECTION_QUERY,
+                             NULL,
+                             &SectionSize,
+                             PAGE_EXECUTE_READWRITE,
+                             SEC_COMMIT, // TODO: WTF
+                             NULL));
+
+    NT_ERR_E(NtMapViewOfSection(hSection,
+                                hProcess,
+                                (PVOID *)&MappingBase,
+                                0,
+                                0,
+                                NULL,
+                                &MappingSize,
+                                ViewShare,
+                                0,
+                                PAGE_EXECUTE_READWRITE));
+
+    ULONG OldProtection;
+
+    /*NT_ERR_E(NtProtectVirtualMemory(hProcess,
+                                    (PVOID *)&MappingBase,
+                                    &MappingSize,
+                                    PAGE_NOACCESS,
+                                    &OldProtection));*/
+
+    for (std::vector<Elf32_Phdr>::const_iterator It = m_ProgramHeaders.begin();
+                                                 It != m_ProgramHeaders.end();
+                                                 It++)
+    {
+        if (It->p_type != PT_LOAD)
+            continue;
+
+        PVOID BaseAddress = PVOID(It->p_vaddr);
+
+        ReadFromFile(m_File, BaseAddress, It->p_offset, It->p_filesz);
+
+        ULONG Protection, OldProtection;
+
+        switch (It->p_flags)
+        {
+        case PF_R:
+            Protection = PAGE_READONLY;
+        case PF_R | PF_W:
+            Protection = PAGE_WRITECOPY;
+        case PF_R | PF_X:
+            Protection = PAGE_EXECUTE_READ;
+        default:
+            ASSERT(FALSE);
+        }
+
+        SIZE_T MemorySize = It->p_memsz;
+
+        NT_ERR_E(NtProtectVirtualMemory(hProcess,
+                                        &BaseAddress,
+                                        &MemorySize,
+                                        Protection,
+                                        &OldProtection));
+
+        if (It->p_memsz > It->p_filesz && It->p_flags & PF_W)
+        {
+            //memset((BYTE *)BaseAddress + It->p_filesz, 0, It->p_memsz - It->p_filesz);
+        }
     }
 }
