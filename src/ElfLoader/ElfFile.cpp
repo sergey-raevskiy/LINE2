@@ -1,7 +1,6 @@
 #include "ElfFile.h"
 
 #include "..\Common\NtException.h"
-#include "..\Common\NtHandle.h"
 #include <iofuncs.h>
 #include <rtlfuncs.h>
 #include <obfuncs.h>
@@ -195,7 +194,7 @@ void ElfFile::GetImageBoundaries(SIZE_T & Min, SIZE_T & Max)
     }
 }
 
-void ElfFile::Map(HANDLE hProcess)
+void ElfFile::Map(const NtHandle & hProcess)
 {
     NtHandle hSection;
 

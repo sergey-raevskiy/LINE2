@@ -4,6 +4,8 @@
 #include <vector>
 #include <map>
 
+#include "..\Common\NtHandle.h"
+
 /* 32-bit ELF base types. */
 typedef unsigned int Elf32_Addr;
 typedef unsigned short Elf32_Half;
@@ -97,7 +99,7 @@ public:
     ElfFile(LPCWSTR FileName);
     ~ElfFile();
 
-    void Map(HANDLE hProcess);
+    void Map(const NtHandle & hProcess);
 
 private:
     ElfFile(const ElfFile &);
