@@ -11,8 +11,10 @@ typedef int (*SyscallHandler)(PVOID arg1, PVOID arg2,
 static SyscallHandler SysEntry[] = {
 
 #define __SYSCALL(name) sys_##name ,
+#define __IMPLEMENTED(name, ...) __SYSCALL(name)
 #include "syscalls.inc"
 #undef __SYSCALL
+#undef __IMPLEMENTED
 
 };
 
@@ -29,7 +31,8 @@ static int DispatchSyscall(int SyscallId,
     }
     else
     {
-        return -LINUX_ENOSYS;
+        printf("unexpected syscall: %d\n", SyscallId);
+        exit(1);
     }
 }
 

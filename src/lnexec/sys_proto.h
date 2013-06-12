@@ -5,8 +5,11 @@
                                               void *arg3, void *arg4,         \
                                               void *arg5, void *arg6);
 
+#define __IMPLEMENTED(name, ...) extern int sys_##name(__VA_ARGS__, ...);
+
 #include "syscalls.inc"
 
 #undef __SYSCALL
+#undef __IMPLEMENTED
 
 #endif

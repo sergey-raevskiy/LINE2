@@ -70,6 +70,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stubs.c" />
     <ClCompile Include="syscall_dispatch.c" />
+    <ClCompile Include="sys_open.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">

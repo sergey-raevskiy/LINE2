@@ -12,6 +12,9 @@
     return -LINUX_ENOSYS;                                                     \
 }
 
+#define __IMPLEMENTED(name, ...)
+
 #include "syscalls.inc"
 
 #undef __SYSCALL
+#undef __IMPLEMENTED
