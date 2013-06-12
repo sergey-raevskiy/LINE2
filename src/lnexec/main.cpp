@@ -12,6 +12,21 @@ void eprintf(const char *str, ...)
     va_end(va);
 }
 
+void start(void *entry)
+{
+    __asm
+    {
+        xor eax, eax
+
+        push eax // argc
+        push eax // last argv
+        push eax // last envp
+
+        mov eax, entry
+        jmp entry
+    }
+}
+
 int main(int argc, char **argv)
 {
     if (argc < 2)
@@ -26,6 +41,8 @@ int main(int argc, char **argv)
         ElfFile executable(path);
 
         executable.Map(GetCurrentProcess());
+
+        start(executable.GetEntryPoint());
     }
     catch (const Exception & ex)
     {
