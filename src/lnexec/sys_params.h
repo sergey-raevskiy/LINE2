@@ -1,6 +1,8 @@
 #ifndef _SYS_PARAMS_H_
 #define _SYS_PARAMS_H_
 
+/* uname */
+
 #define __OLD_UTS_LEN 8
 
 typedef struct {
@@ -29,5 +31,12 @@ typedef struct {
     char machine[__NEW_UTS_LEN + 1];
     char domainname[__NEW_UTS_LEN + 1];
 } linux_new_utsname_t;
+
+/* vectored IO */
+
+typedef struct {
+    void *iov_base;
+    size_t iov_len;
+} linux_iovec_t;
 
 #endif /* _SYS_PARAMS_H_ */

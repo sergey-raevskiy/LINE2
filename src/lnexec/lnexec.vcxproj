@@ -72,6 +72,7 @@
     <ClCompile Include="syscall_dispatch.c" />
     <ClCompile Include="sys_open.c" />
     <ClCompile Include="sys_uname.c" />
+    <ClCompile Include="sys_write.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">

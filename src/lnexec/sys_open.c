@@ -8,5 +8,5 @@ int sys_open(const char *name,
 {
     printf("sys_open(\"%s\", %x, %x): stub\n", name, flags, mode);
 
-    return -LINUX_ENOSYS;
+    return 0;
 }
