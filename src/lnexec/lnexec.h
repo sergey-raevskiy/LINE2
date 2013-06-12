@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 void InitSyscallInterceptor();
+void HandleSyscall();
 
 #ifdef __cplusplus
 };

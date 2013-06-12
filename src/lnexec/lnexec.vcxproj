@@ -68,6 +68,8 @@
   <ItemGroup>
     <ClCompile Include="intercept.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="stubs.c" />
+    <ClCompile Include="syscall_dispatch.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
@@ -78,7 +80,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="linux_errno.h" />
     <ClInclude Include="lnexec.h" />
+    <ClInclude Include="sys_proto.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="syscalls.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
