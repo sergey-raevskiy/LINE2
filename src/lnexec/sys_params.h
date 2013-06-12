@@ -1,3 +1,6 @@
+#ifndef _SYS_PARAMS_H_
+#define _SYS_PARAMS_H_
+
 #define __OLD_UTS_LEN 8
 
 typedef struct {
@@ -26,3 +29,5 @@ typedef struct {
     char machine[__NEW_UTS_LEN + 1];
     char domainname[__NEW_UTS_LEN + 1];
 } linux_new_utsname_t;
+
+#endif /* _SYS_PARAMS_H_ */
