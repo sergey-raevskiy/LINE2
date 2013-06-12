@@ -66,6 +66,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gs_support.c" />
     <ClCompile Include="intercept.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stubs.c" />
@@ -85,6 +86,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gs_support.h" />
     <ClInclude Include="linux_errno.h" />
     <ClInclude Include="lnexec.h" />
     <ClInclude Include="sys_params.h" />

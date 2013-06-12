@@ -2,6 +2,7 @@
 #include <rtlfuncs.h>
 
 #include "lnexec.h"
+#include "gs_support.h"
 
 static LONG TryHandleInt80(PCONTEXT pContext)
 {
@@ -25,11 +26,38 @@ static LONG TryHandleInt80(PCONTEXT pContext)
     }
 }
 
+static LONG TryHandleGS(PCONTEXT pContext)
+{
+    PBYTE PC = (PBYTE)pContext->Eip;
+
+    switch (PC[0])
+    {
+    case 0x8e:
+        if (PC[1] == 0xe8)
+        {
+            // mov gs, ax
+
+            GSLoad(pContext->Eax & 0xffff);
+            pContext->Eip += 2;
+
+            return EXCEPTION_CONTINUE_EXECUTION;
+        }
+        break;
+    }
+
+    return EXCEPTION_CONTINUE_SEARCH;
+}
+
 static LONG NTAPI ExceptionHandler(struct _EXCEPTION_POINTERS *ExceptionInfo)
 {
     LONG Result = EXCEPTION_CONTINUE_SEARCH;
 
     Result = TryHandleInt80(ExceptionInfo->ContextRecord);
+
+    if (Result == EXCEPTION_CONTINUE_SEARCH)
+    {
+        Result = TryHandleGS(ExceptionInfo->ContextRecord);
+    }
 
     return Result;
 }
