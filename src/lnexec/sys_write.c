@@ -30,6 +30,7 @@ int sys_writev(int fd,
     NTSTATUS Status;
     IO_STATUS_BLOCK Iosb;
     INT CurrentBuffer;
+    SSIZE_T TotalBytes;
 
     if (!hFile)
     {
@@ -37,6 +38,8 @@ int sys_writev(int fd,
     }
 
     // FIXME: Fallback
+
+    TotalBytes = 0;
 
     for (CurrentBuffer = 0; CurrentBuffer < iovcnt; CurrentBuffer++)
     {
@@ -50,11 +53,15 @@ int sys_writev(int fd,
                              NULL,
                              NULL);
 
-        if (!NT_SUCCESS(Status))
+        if (NT_SUCCESS(Status))
+        {
+            TotalBytes += Iosb.Information;
+        }
+        else
         {
             return -1;
         }
     }
 
-    return 0;
+    return TotalBytes;
 }
