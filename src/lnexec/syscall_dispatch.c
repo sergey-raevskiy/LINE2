@@ -40,6 +40,18 @@ __declspec(naked) void HandleSyscall()
 {
     __asm
     {
+        /*
+            Linux takes system call arguments in registers:
+
+            syscall number  %eax     call-clobbered
+            arg 1           %ebx     call-saved
+            arg 2           %ecx     call-clobbered
+            arg 3           %edx     call-clobbered
+            arg 4           %esi     call-saved
+            arg 5           %edi     call-saved
+            arg 6           %ebp     call-saved
+        */
+
         push ebp
         push edi
         push esi
@@ -51,7 +63,13 @@ __declspec(naked) void HandleSyscall()
 
         call DispatchSyscall
 
-        add esp, 7*4
+        add esp, 4
+        pop ebx
+        add esp, 8
+        pop esi
+        pop edi
+        pop ebp
+
         ret
     }
 }
