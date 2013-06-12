@@ -1,5 +1,6 @@
 #include <windef.h>
 #include <rtlfuncs.h>
+#include <stdio.h>
 
 #include "lnexec.h"
 #include "gs_support.h"
@@ -26,6 +27,23 @@ static LONG TryHandleInt80(PCONTEXT pContext)
     }
 }
 
+static void DumpAroundPC(PBYTE PC)
+{
+    PBYTE Begin = PC - 10,
+          End = PC + 10,
+          Current;
+
+    for (Current = Begin; Current < End; Current++)
+    {
+        if (Current == PC)
+        {
+            printf("@");
+        }
+
+        printf("%02x ", *Current);
+    }
+}
+
 static LONG HandleGsIstruction(PCONTEXT pContext)
 {
     PBYTE PC = (PBYTE)pContext->Eip;
@@ -45,6 +63,11 @@ static LONG HandleGsIstruction(PCONTEXT pContext)
 
         return EXCEPTION_CONTINUE_EXECUTION;
 
+        break;
+    default:
+        printf("Unexpected GS operation. Code dump around PC:\n");
+        DumpAroundPC(PC);
+        exit(1);
         break;
     }
 
