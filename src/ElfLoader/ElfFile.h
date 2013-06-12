@@ -100,6 +100,7 @@ public:
     ~ElfFile();
 
     void Map(const NtHandle & hProcess);
+    PVOID GetEntryPoint();
 
 private:
     ElfFile(const ElfFile &);

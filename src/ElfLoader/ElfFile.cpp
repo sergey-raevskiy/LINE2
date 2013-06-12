@@ -275,3 +275,8 @@ void ElfFile::Map(const NtHandle & hProcess)
         }
     }
 }
+
+PVOID ElfFile::GetEntryPoint()
+{
+    return PVOID(m_Header.e_entry);
+}
