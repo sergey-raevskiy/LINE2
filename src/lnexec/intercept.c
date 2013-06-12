@@ -64,6 +64,19 @@ static LONG HandleGsIstruction(PCONTEXT pContext)
         return EXCEPTION_CONTINUE_EXECUTION;
 
         break;
+    case 0xc7:
+        if (PC[2] == 0x00)
+        {
+            // mov gs:[eax], imm32
+
+            Address = GSTranslateAddress((PVOID) pContext->Eax);
+            *(UINT *)Address = *(UINT *)&PC[3];
+            pContext->Eip += 7;
+
+            return EXCEPTION_CONTINUE_EXECUTION;
+        }
+
+        break;
     default:
         printf("Unexpected GS operation. Code dump around PC:\n");
         DumpAroundPC(PC);
