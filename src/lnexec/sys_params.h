@@ -56,4 +56,8 @@ typedef struct {
 #endif
 } linux_user_desc_t;
 
+/* time */
+
+typedef int linux_time_t;
+
 #endif /* _SYS_PARAMS_H_ */

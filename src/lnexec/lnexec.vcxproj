@@ -76,6 +76,7 @@
     <ClCompile Include="sys_gid.c" />
     <ClCompile Include="sys_open.c" />
     <ClCompile Include="sys_read.c" />
+    <ClCompile Include="sys_time.c" />
     <ClCompile Include="sys_tls.c" />
     <ClCompile Include="sys_uid.c" />
     <ClCompile Include="sys_uname.c" />
