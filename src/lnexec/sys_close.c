@@ -6,5 +6,5 @@ int sys_close(int fd)
 {
     // Do not close any fd's at the moment.
 
-    return -LINUX_ENOSYS;
+    return 0;
 }
