@@ -72,6 +72,7 @@
     <ClCompile Include="stubs.c" />
     <ClCompile Include="syscall_dispatch.c" />
     <ClCompile Include="sys_brk.c" />
+    <ClCompile Include="sys_close.c" />
     <ClCompile Include="sys_open.c" />
     <ClCompile Include="sys_read.c" />
     <ClCompile Include="sys_tls.c" />
