@@ -22,9 +22,9 @@ static HANDLE TranslateFile(int fd)
     }
 }
 
-int sys_writev(int fd, 
-               linux_iovec_t *iov,
-               size_t iovcnt)
+int sys_readv(int fd, 
+              linux_iovec_t *iov,
+              size_t iovcnt)
 {
     HANDLE hFile = TranslateFile((int)fd);
     NTSTATUS Status;
@@ -43,15 +43,15 @@ int sys_writev(int fd,
 
     for (CurrentBuffer = 0; CurrentBuffer < iovcnt; CurrentBuffer++)
     {
-        Status = NtWriteFile(hFile,
-                             NULL,
-                             NULL,
-                             NULL,
-                             &Iosb,
-                             iov[CurrentBuffer].iov_base,
-                             iov[CurrentBuffer].iov_len,
-                             NULL,
-                             NULL);
+        Status = NtReadFile(hFile,
+                            NULL,
+                            NULL,
+                            NULL,
+                            &Iosb,
+                            iov[CurrentBuffer].iov_base,
+                            iov[CurrentBuffer].iov_len,
+                            NULL,
+                            NULL);
 
         if (NT_SUCCESS(Status))
         {
@@ -64,4 +64,17 @@ int sys_writev(int fd,
     }
 
     return TotalBytes;
+}
+
+
+int sys_read(int fd,
+             void *buf,
+             size_t count)
+{
+    linux_iovec_t iov;
+
+    iov.iov_base = buf;
+    iov.iov_len = count;
+
+    return sys_readv(fd, &iov, 1);
 }
