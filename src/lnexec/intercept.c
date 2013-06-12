@@ -75,11 +75,58 @@ static LONG HandleGsIstruction(PCONTEXT pContext)
 
             return EXCEPTION_CONTINUE_EXECUTION;
         }
-
         break;
+
+    case 0x83:
+        if (PC[2] == 0x3d)
+        {
+            // cmp gs:[imm32], imm8
+
+            BYTE A, B;
+
+            Address = GSTranslateAddress(*(PVOID *) &PC[3]);
+            A = *(PBYTE)Address;
+            B = PC[7];
+
+            pContext->EFlags &=~ (0x01 | 0x40 | 0x80);
+            pContext->EFlags |= (B > A) * 0x01;
+            pContext->EFlags |= (B == A) * 0x40;
+            pContext->EFlags |= (B > A) * 0x01;
+
+            pContext->Eip += 8;
+
+            return EXCEPTION_CONTINUE_EXECUTION;
+        }
+        break;
+
+    case 0x8b:
+        if (PC[2] == 0x3a)
+        {
+            // mov         edi,dword ptr gs:[edx]
+
+            Address = GSTranslateAddress((PVOID) pContext->Edx);
+            pContext->Edi = *(UINT *)Address;
+            pContext->Eip += 3;
+
+            return EXCEPTION_CONTINUE_EXECUTION;
+        }
+
+        if (PC[2] == 0x00)
+        {
+            // mov         eax,dword ptr gs:[eax]  
+
+            Address = GSTranslateAddress((PVOID) pContext->Eax);
+            pContext->Eax = *(UINT *)Address;
+            pContext->Eip += 3;
+
+            return EXCEPTION_CONTINUE_EXECUTION;
+        }
+        break;
+
     default:
         printf("Unexpected GS operation. Code dump around PC:\n");
         DumpAroundPC(PC);
+        system("pause");
         exit(1);
         break;
     }
