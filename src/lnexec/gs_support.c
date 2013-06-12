@@ -27,3 +27,12 @@ void GSLoad(USHORT Value)
 
     TlsSetValue(CurrentGs(), pDescriptor);
 }
+
+PVOID GSTranslateAddress(UINT Address)
+{
+    linux_user_desc_t *pDescriptor;
+
+    pDescriptor = (linux_user_desc_t *) TlsGetValue(CurrentGs());
+
+    return (PVOID) (pDescriptor->base_addr + Address);
+}

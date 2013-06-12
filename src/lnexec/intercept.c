@@ -26,6 +26,31 @@ static LONG TryHandleInt80(PCONTEXT pContext)
     }
 }
 
+static LONG HandleGsIstruction(PCONTEXT pContext)
+{
+    PBYTE PC = (PBYTE)pContext->Eip;
+    PVOID Address;
+
+    switch (PC[1])
+    {
+    case 0xa3:
+
+        // mov gs:[x], eax
+
+        Address = *(PVOID *) &PC[2];
+        Address = GSTranslateAddress(Address);
+
+        *(UINT *) Address = pContext->Eax;
+        pContext->Eip += 6;
+
+        return EXCEPTION_CONTINUE_EXECUTION;
+
+        break;
+    }
+
+    return EXCEPTION_CONTINUE_SEARCH;
+}
+
 static LONG TryHandleGS(PCONTEXT pContext)
 {
     PBYTE PC = (PBYTE)pContext->Eip;
@@ -42,6 +67,9 @@ static LONG TryHandleGS(PCONTEXT pContext)
 
             return EXCEPTION_CONTINUE_EXECUTION;
         }
+        break;
+    case 0x65:
+        return HandleGsIstruction(pContext);
         break;
     }
 

@@ -8,6 +8,7 @@ extern "C" {
 #include <windef.h>
 
 void GSLoad(USHORT Value);
+PVOID GSTranslateAddress(PVOID Address);
 
 #ifdef __cplusplus
 };
