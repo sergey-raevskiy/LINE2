@@ -263,11 +263,14 @@ void ElfFile::Map(const NtHandle & hProcess)
 
         SIZE_T MemorySize = It->p_memsz;
 
-        NT_ERR_E(NtProtectVirtualMemory(hProcess,
-                                        &BaseAddress,
-                                        &MemorySize,
-                                        Protection,
-                                        &OldProtection));
+        // FIXME: For some reasons writable segment is read only, which causes
+        // access violation.
+
+        // NT_ERR_E(NtProtectVirtualMemory(hProcess,
+        //                                 &BaseAddress,
+        //                                 &MemorySize,
+        //                                 Protection,
+        //                                 &OldProtection));
 
         if (It->p_memsz > It->p_filesz && It->p_flags & PF_W)
         {
