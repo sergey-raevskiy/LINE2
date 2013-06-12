@@ -55,10 +55,7 @@ static LONG HandleGsIstruction(PCONTEXT pContext)
 
         // mov gs:[x], eax
 
-        Address = *(PVOID *) &PC[2];
-        Address = GSTranslateAddress(Address);
-
-        *(UINT *) Address = pContext->Eax;
+        GSWriteDWord(*(PUINT) &PC[2], pContext->Eax);
         pContext->Eip += 6;
 
         return EXCEPTION_CONTINUE_EXECUTION;
@@ -69,8 +66,7 @@ static LONG HandleGsIstruction(PCONTEXT pContext)
         {
             // mov gs:[eax], imm32
 
-            Address = GSTranslateAddress((PVOID) pContext->Eax);
-            *(UINT *)Address = *(UINT *)&PC[3];
+            GSWriteDWord(pContext->Eax, *(PUINT)&PC[3]);
             pContext->Eip += 7;
 
             return EXCEPTION_CONTINUE_EXECUTION;
@@ -84,8 +80,7 @@ static LONG HandleGsIstruction(PCONTEXT pContext)
 
             BYTE A, B;
 
-            Address = GSTranslateAddress(*(PVOID *) &PC[3]);
-            A = *(PBYTE)Address;
+            A = GSReadDword(*(PDWORD) &PC[3]) & 0xff;
             B = PC[7];
 
             pContext->EFlags &=~ (0x01 | 0x40 | 0x80);
@@ -104,8 +99,7 @@ static LONG HandleGsIstruction(PCONTEXT pContext)
         {
             // mov         edi,dword ptr gs:[edx]
 
-            Address = GSTranslateAddress((PVOID) pContext->Edx);
-            pContext->Edi = *(UINT *)Address;
+            pContext->Edi = GSReadDword(pContext->Edx);
             pContext->Eip += 3;
 
             return EXCEPTION_CONTINUE_EXECUTION;
@@ -115,8 +109,7 @@ static LONG HandleGsIstruction(PCONTEXT pContext)
         {
             // mov         eax,dword ptr gs:[eax]  
 
-            Address = GSTranslateAddress((PVOID) pContext->Eax);
-            pContext->Eax = *(UINT *)Address;
+            pContext->Eax = GSReadDword(pContext->Eax);
             pContext->Eip += 3;
 
             return EXCEPTION_CONTINUE_EXECUTION;

@@ -4,6 +4,7 @@
 #include "linux_errno.h"
 
 #include <windows.h>
+#include <stdio.h>
 
 int sys_set_thread_area(linux_user_desc_t *udesc)
 {
@@ -22,6 +23,11 @@ int sys_set_thread_area(linux_user_desc_t *udesc)
     pSegmentDescriptor =
         (linux_user_desc_t *) malloc(sizeof(linux_user_desc_t));
     memcpy(pSegmentDescriptor, udesc, sizeof(linux_user_desc_t));
+
+    printf("sys_set_thread_area: segment %d: base = 0x%p, limit = 0x%p\n",
+           pSegmentDescriptor->entry_number,
+           pSegmentDescriptor->base_addr,
+           pSegmentDescriptor->limit);
 
     TlsSetValue(udesc->entry_number, pSegmentDescriptor);
 

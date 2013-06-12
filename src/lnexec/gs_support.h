@@ -8,7 +8,8 @@ extern "C" {
 #include <windef.h>
 
 void GSLoad(USHORT Value);
-PVOID GSTranslateAddress(PVOID Address);
+void GSWriteDWord(UINT Address, DWORD Data);
+DWORD GSReadDword(UINT Address);
 
 #ifdef __cplusplus
 };
