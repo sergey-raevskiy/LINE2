@@ -71,6 +71,7 @@
     <ClCompile Include="stubs.c" />
     <ClCompile Include="syscall_dispatch.c" />
     <ClCompile Include="sys_open.c" />
+    <ClCompile Include="sys_uname.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
@@ -83,6 +84,7 @@
   <ItemGroup>
     <ClInclude Include="linux_errno.h" />
     <ClInclude Include="lnexec.h" />
+    <ClInclude Include="sys_params.h" />
     <ClInclude Include="sys_proto.h" />
   </ItemGroup>
   <ItemGroup>
