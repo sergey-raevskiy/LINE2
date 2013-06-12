@@ -4,6 +4,8 @@
 #include "..\ElfLoader\ElfFile.h"
 #include "..\Common\Exception.h"
 
+#include "lnexec.h"
+
 void eprintf(const char *str, ...)
 {
     va_list va;
@@ -41,6 +43,8 @@ int main(int argc, char **argv)
         ElfFile executable(path);
 
         executable.Map(GetCurrentProcess());
+
+        InitSyscallInterceptor();
 
         start(executable.GetEntryPoint());
     }
