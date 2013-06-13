@@ -51,6 +51,49 @@ static LONG HandleGsIstruction(PCONTEXT pContext)
 
     switch (PC[1])
     {
+    case 0x33:
+        if (PC[2] == 0x15)
+        {
+            // xor         edx,dword ptr gs:[18h]
+            pContext->Edx ^= GSReadDword(*(PDWORD) &PC[3]);
+            pContext->Eip += 7;
+
+            return EXCEPTION_CONTINUE_EXECUTION;
+        }
+
+        if (PC[2] == 0x0d)
+        {
+            // xor         ecx,dword ptr gs:[18h]
+
+            pContext->Ecx ^= GSReadDword(*(PDWORD) &PC[3]);
+            pContext->Eip += 7;
+
+            return EXCEPTION_CONTINUE_EXECUTION;
+        }
+
+        if (PC[2] == 0x05)
+        {
+            // xor         eax,dword ptr gs:[18h]
+
+            pContext->Eax ^= GSReadDword(*(PDWORD) &PC[3]);
+            pContext->Eip += 7;
+
+            return EXCEPTION_CONTINUE_EXECUTION;
+        }
+
+        break;
+
+    case 0xa1:
+
+        // mov         eax,dword ptr gs:[00000080h]
+
+        pContext->Eax = GSReadDword(*(PDWORD) &PC[2]);
+        pContext->Eip += 6;
+
+        return EXCEPTION_CONTINUE_EXECUTION;
+
+        break;
+
     case 0xa3:
 
         // mov gs:[x], eax
@@ -92,6 +135,29 @@ static LONG HandleGsIstruction(PCONTEXT pContext)
 
             return EXCEPTION_CONTINUE_EXECUTION;
         }
+        break;
+
+    case 0x89:
+        if (PC[2] == 0x0a)
+        {
+            // mov dword ptr gs:[edx],ecx
+
+            GSWriteDWord(pContext->Edx, pContext->Ecx);
+            pContext->Eip += 3;
+
+            return EXCEPTION_CONTINUE_EXECUTION;
+        }
+
+        if (PC[2] == 0x10)
+        {
+            // 08056780  mov         dword ptr gs:[eax],edx
+
+            GSWriteDWord(pContext->Eax, pContext->Edx);
+            pContext->Eip += 3;
+
+            return EXCEPTION_CONTINUE_EXECUTION;
+        }
+
         break;
 
     case 0x8b:
