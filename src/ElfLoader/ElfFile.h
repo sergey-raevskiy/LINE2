@@ -101,6 +101,8 @@ public:
 
     void Map(const NtHandle & hProcess);
     PVOID GetEntryPoint();
+    PVOID GetBreak();
+    void GetPhdr(Elf32_Phdr *& Phdr, UINT & Phnum);
 
 private:
     ElfFile(const ElfFile &);

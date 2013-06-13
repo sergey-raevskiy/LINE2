@@ -7,6 +7,7 @@ extern "C" {
 
 void InitSyscallInterceptor();
 void HandleSyscall();
+void SetInitialBreak(PVOID Break);
 
 #ifdef __cplusplus
 };

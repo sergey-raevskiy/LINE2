@@ -202,6 +202,8 @@ void ElfFile::Map(const NtHandle & hProcess)
 
     GetImageBoundaries(Min, Max);
 
+    Max += 10 * 1024 * 1024;
+
     SIZE_T MappingBase = Min & 0xffff0000;
     SIZE_T MappingSize = (Max - Min) + (Min & 0xffff);
 
@@ -282,4 +284,28 @@ void ElfFile::Map(const NtHandle & hProcess)
 PVOID ElfFile::GetEntryPoint()
 {
     return PVOID(m_Header.e_entry);
+}
+
+PVOID ElfFile::GetBreak()
+{
+    SIZE_T Min, Max;
+
+    GetImageBoundaries(Min, Max);
+
+    return PVOID(Max);
+}
+
+void ElfFile::GetPhdr(Elf32_Phdr *& Phdr, UINT & Phnum)
+{
+    Phnum = m_Header.e_phnum;
+    Phdr = (Elf32_Phdr *) calloc(Phnum, sizeof(Elf32_Phdr));
+
+    Elf32_Phdr *Current = Phdr;
+
+    for (std::vector<Elf32_Phdr>::const_iterator It = m_ProgramHeaders.begin();
+                                                 It != m_ProgramHeaders.end();
+                                                 It++, Current++)
+    {
+        memcpy(Current, &(*It), sizeof (Elf32_Phdr));
+    }
 }

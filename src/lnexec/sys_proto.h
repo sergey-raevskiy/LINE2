@@ -1,6 +1,10 @@
 #ifndef _SYS_PROTO_H_
 #define _SYS_PROTO_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <windef.h>
 
 #include "sys_params.h"
@@ -15,5 +19,9 @@
 
 #undef __SYSCALL
 #undef __IMPLEMENTED
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif
