@@ -64,9 +64,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mz.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="elf.h" />
+    <ClInclude Include="elf2pe.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
