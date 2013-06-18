@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdarg.h>
+#include <atlstr.h>
+#include <atlfile.h>
 
 void eprintf(wchar_t *fmt, ...)
 {
@@ -10,6 +12,24 @@ void eprintf(wchar_t *fmt, ...)
     va_end(va);
 }
 
+int ProcessFile(LPCWSTR inFileName, LPCWSTR outFileName)
+{
+    CAtlFile inFile;
+    CAtlFile outFile;
+
+    inFile.Create(inFileName,
+                  FILE_READ_DATA,
+                  FILE_SHARE_READ | FILE_SHARE_DELETE,
+                  OPEN_EXISTING);
+
+    outFile.Create(outFileName,
+                   FILE_WRITE_DATA,
+                   0,
+                   CREATE_ALWAYS);
+
+    return 0;
+}
+
 int wmain(int argc, wchar_t **argv)
 {
     if (argc < 3)
@@ -18,5 +38,5 @@ int wmain(int argc, wchar_t **argv)
         return 1;
     }
 
-    return 0;
+    return ProcessFile(argv[1], argv[2]);
 }
