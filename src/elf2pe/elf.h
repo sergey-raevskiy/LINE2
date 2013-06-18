@@ -1,12 +1,14 @@
 #ifndef _ELF_H_
 #define _ELF_H_
 
+#include <windef.h>
+
 /* 32-bit ELF base types. */
-typedef unsigned int Elf32_Addr;
-typedef unsigned short Elf32_Half;
-typedef unsigned int Elf32_Off;
-typedef signed int Elf32_Sword;
-typedef unsigned int Elf32_Word;
+typedef UINT    Elf32_Addr;
+typedef USHORT  Elf32_Half;
+typedef UINT    Elf32_Off;
+typedef INT     Elf32_Sword;
+typedef UINT    Elf32_Word;
 
 #define EI_NIDENT 16
 
