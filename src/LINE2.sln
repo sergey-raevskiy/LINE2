@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lnexec", "lnexec\lnexec.vcxproj", "{A287FC19-B4DA-44CE-BAAA-BA86D16B21DA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "elf2pe", "elf2pe\elf2pe.vcxproj", "{24084D43-597E-454A-A663-9DE9F67DAB9B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,12 @@ Global
 		{A287FC19-B4DA-44CE-BAAA-BA86D16B21DA}.Release|Win32.ActiveCfg = Release|Win32
 		{A287FC19-B4DA-44CE-BAAA-BA86D16B21DA}.Release|Win32.Build.0 = Release|Win32
 		{A287FC19-B4DA-44CE-BAAA-BA86D16B21DA}.Release|Win32.Deploy.0 = Release|Win32
+		{24084D43-597E-454A-A663-9DE9F67DAB9B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{24084D43-597E-454A-A663-9DE9F67DAB9B}.Debug|Win32.Build.0 = Debug|Win32
+		{24084D43-597E-454A-A663-9DE9F67DAB9B}.Debug|Win32.Deploy.0 = Debug|Win32
+		{24084D43-597E-454A-A663-9DE9F67DAB9B}.Release|Win32.ActiveCfg = Release|Win32
+		{24084D43-597E-454A-A663-9DE9F67DAB9B}.Release|Win32.Build.0 = Release|Win32
+		{24084D43-597E-454A-A663-9DE9F67DAB9B}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
