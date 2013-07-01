@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 {
     if (argc < 2)
     {
-        eprintf("Usage: %s ELF <args>", argv[0]);
+        eprintf("Usage: %s ELF <args>\n", argv[0]);
         return 1;
     }
 
