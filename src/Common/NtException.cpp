@@ -5,7 +5,7 @@ static CString FormatStatus(NTSTATUS Status)
     CString Message;
 
     // Basic status formatting.
-    Message.Format(L"%x", Status);
+    Message.Format(L"%08x", Status);
 
     return Message;
 }
